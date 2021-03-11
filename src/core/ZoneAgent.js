@@ -23,7 +23,7 @@ class ZoneAgent {
 
     this.heartbeat = setInterval(() => {
       for (var pcid in this.players) {
-        if (this.players[pcid].zoneStatus !== parseInt(this.zoneAgent.config.ACCOUNTSERVER.ID, 10)) {
+        if (this.players[pcid].zoneStatus !== parseInt(this.config.ACCOUNTSERVER.ID, 10)) {
           this.players[pcid].tickCount++;
           this.players[pcid].tickSvr = Date.now();
           const packetMaker = new MSG_ZACL_CHK_TIMETICK(
@@ -42,6 +42,7 @@ class ZoneAgent {
     console.log('Shutting down ZoneAgent...');
     clearInterval(this.heartbeat);
     for (var pcid in this.players) {
+      console.log(`Kicking account ${this.players[pcid].account}`);
       this.players[pcid].socket.destroy();
     }
 

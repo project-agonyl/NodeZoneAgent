@@ -40,8 +40,9 @@ class ZoneServer {
       this.client.write(initPacketMaker.build().serialize());
     });
 
-    this.client.on('data', (data) => {
-      while (data.length <= 4) {
+    this.client.on('data', (buffer) => {
+      let data = buffer.toByteArray();
+      while (data.length > 4) {
         const currentLength = getDataLengthFromPacket(data);
         if (currentLength === data.length) {
           this.processPacket(data);
@@ -74,10 +75,13 @@ class ZoneServer {
   }
 
   processPacket(data) {
+    console.log('From server:');
+    console.log(data);
     const pcid = getPcidFromPacket(data);
     if (_.has(this.zoneAgent.players, pcid)) {
       if (data[8] === 0x01 && data[9] === 0xE1) {
         const decryptedData = decrypt(data);
+        console.log(`ZoneStatus of ${this.zoneAgent.players[pcid].account} changed from ${this.zoneAgent.players[pcid].zoneStatus} to ${decryptedData[0x0A]}`);
         this.zoneAgent.players[pcid].zoneStatus = decryptedData[0x0A];
         return;
       }
@@ -86,7 +90,7 @@ class ZoneServer {
         // Save character name and town to ZA player list
       } else if (data[10] === 0x05 && data[11] === 0x11) {
         data = decrypt(data);
-        for (let i = 32; i <= 784; i += 188){
+        for (let i = 32; i <= 784; i += 188) {
           data[i + 3] = data[i + 2];
           data[i + 2] = data[i + 1];
           data[i + 1] = 1;

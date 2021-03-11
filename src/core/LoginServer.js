@@ -1,8 +1,8 @@
 const Net = require('net');
-const { StringDecoder } = require('string_decoder');
 const getPcidFromPacket = require('../helpers/getPcidFromPacket');
 const MSG_ZA2LS_CONNECT = require('../messages/MSG_ZA2LS_CONNECT');
 const MSG_ZA2LS_REPORT = require('../messages/MSG_ZA2LS_REPORT');
+const getStringFromByteArray = require('../helpers/getStringFromByteArray');
 
 class LoginServer {
   constructor(config) {
@@ -40,23 +40,19 @@ class LoginServer {
       }, 1000);
     });
 
-    this.client.on('data', (data) => {
-      let decoder;
+    this.client.on('data', (buffer) => {
+      let data = buffer.toByteArray();
       switch (data[8]) {
         case 0x01:
           switch (data[9]) {
             case 0xE1:
-              decoder = new StringDecoder('utf8');
-              const prepareData = decoder.end(data);
-              const account = prepareData.substr(10, 20).trim();
+              const account = getStringFromByteArray(data, 10, 20);
               const pcid = getPcidFromPacket(data);
               this.preparedUsers[pcid] = account;
               console.log(`Account ${account} prepared!`);
               break;
             case 0xE3:
-              decoder = new StringDecoder('utf8');
-              const duplicateLoginData = decoder.end(data);
-              const duplicateAccount = duplicateLoginData.substr(10, 20).trim();
+              const duplicateAccount = getStringFromByteArray(data, 10, 20);
               console.log(`Handle duplicate login attempt for ${duplicateAccount}!`);
               break;
             default:
