@@ -75,8 +75,6 @@ class ZoneServer {
   }
 
   processPacket(data) {
-    console.log('From server:');
-    console.log(data);
     const pcid = getPcidFromPacket(data);
     if (_.has(this.zoneAgent.players, pcid)) {
       if (data[8] === 0x01 && data[9] === 0xE1) {
