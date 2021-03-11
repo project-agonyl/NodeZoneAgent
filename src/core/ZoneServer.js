@@ -35,7 +35,7 @@ class ZoneServer {
       this.retryCount = 0;
       console.log(`${this.name} ${this.ipAddress}:${this.port} connected!`);
       const initPacketMaker = new MSG_ZA2ZS_CONNECT(
-        this.id
+        parseInt(this.zoneAgent.config.STARTUP.AGENTID, 10)
       );
       this.client.write(initPacketMaker.build().serialize());
     });
