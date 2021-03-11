@@ -53,6 +53,10 @@ class ZoneAgentSession {
           const lsLogoutPacketMaker = new MSG_ZA2LS_ACC_LOGOUT(this.id, this.logoutReason, this.account);
           this.zoneAgent.loginServer.client.write(lsLogoutPacketMaker.build().serialize());
         }
+
+        if (this.zoneAgent.players[this.id]) {
+          delete this.zoneAgent.players[this.id];
+        }
       }
     });
 
