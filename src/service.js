@@ -6,8 +6,8 @@ const LoginServer = require('./core/LoginServer');
 const ZoneServers = require('./core/ZoneServers');
 const ZoneAgent = require('./core/ZoneAgent');
 
-Buffer.prototype.toByteArray = function () {
-  return Array.prototype.slice.call(this, 0)
+Buffer.prototype.toByteArray = function() {
+  return Array.prototype.slice.call(this, 0);
 };
 
 const loginServer = new LoginServer(config);

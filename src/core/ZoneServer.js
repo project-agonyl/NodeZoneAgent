@@ -81,6 +81,7 @@ class ZoneServer {
     if (_.has(this.zoneAgent.players, pcid)) {
       if (data[8] === 0x01 && data[9] === 0xE1) {
         const decryptedData = decrypt(data);
+        // eslint-disable-next-line max-len
         console.log(`ZoneStatus of ${this.zoneAgent.players[pcid].account} changed from ${this.zoneAgent.players[pcid].zoneStatus} to ${decryptedData[0x0A]}`);
         this.zoneAgent.players[pcid].zoneStatus = decryptedData[0x0A];
         return;
