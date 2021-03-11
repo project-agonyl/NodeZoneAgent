@@ -1,5 +1,6 @@
 const _ = require('lodash');
 const MSG_BASE = require('./MSG_BASE');
+const MSG_HEAD_NO_PROTOCOL = require('./MSG_HEAD_NO_PROTOCOL');
 
 class MSG_ZA2ZS_CONNECT extends MSG_BASE {
   constructor(agentId) {
@@ -9,7 +10,8 @@ class MSG_ZA2ZS_CONNECT extends MSG_BASE {
   }
 
   build() {
-    this.packet = [];
+    const header = new MSG_HEAD_NO_PROTOCOL(this.size, 0x01, 0xE0);
+    this.packet = header.build().getPacket();
     this.packet = _.concat(this.packet, this.agentId);
     return this;
   }
