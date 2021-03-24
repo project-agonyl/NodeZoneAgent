@@ -17,7 +17,7 @@ class ZoneAgent {
       const ZAS = new ZoneAgentSession(socket, this);
     });
 
-    this.server.listen(this.config.STARTUP.PORT, () => {
+    this.server.listen(this.config.STARTUP.PORT, '0.0.0.0', () => {
       console.log(`ZoneAgent listening on ${this.config.STARTUP.PORT}`);
     });
 
