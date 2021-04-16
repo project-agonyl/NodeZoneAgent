@@ -31,7 +31,11 @@ class ZoneAgentSession {
       let data = buffer.toByteArray();
       while (data.length > 4) {
         const currentLength = getDataLengthFromPacket(data);
-        if (currentLength === data.length) {
+        if (currentLength === 0) {
+          break;
+        }
+
+        if (currentLength >= data.length) {
           this.processPacket(data);
           break;
         }
