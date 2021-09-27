@@ -19,7 +19,7 @@ class MSG_ZA2LS_REPORT extends MSG_BASE {
       this.packet,
       getReverseHexPacket(this.zaPort, 8),
       this.zsCount1,
-      this.zsCount2
+      this.zsCount2,
     );
     return this;
   }

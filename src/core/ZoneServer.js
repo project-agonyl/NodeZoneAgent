@@ -13,7 +13,7 @@ class ZoneServer {
     if (ipAddress) {
       this.ipAddress = ipAddress;
     } else {
-      ipAddress = '127.0.0.1';
+      this.ipAddress = '127.0.0.1';
     }
 
     if (name) {
@@ -26,7 +26,7 @@ class ZoneServer {
   }
 
   initialize() {
-    this.client = new Net.Socket({ allowHalfOpen: true });
+    this.client = new Net.Socket({allowHalfOpen: true});
     this.client.setKeepAlive(true);
     console.log(`Trying to connect to ${this.name} ${this.ipAddress}:${this.port}...`);
     this.client.connect(this.port, this.ipAddress);
@@ -35,7 +35,7 @@ class ZoneServer {
       this.retryCount = 0;
       console.log(`${this.name} ${this.ipAddress}:${this.port} connected!`);
       const initPacketMaker = new MSG_ZA2ZS_CONNECT(
-        parseInt(this.zoneAgent.config.STARTUP.AGENTID, 10)
+        parseInt(this.zoneAgent.config.STARTUP.AGENTID, 10),
       );
       this.client.write(initPacketMaker.build().serialize());
     });

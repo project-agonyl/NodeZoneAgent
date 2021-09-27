@@ -1,13 +1,37 @@
 {
-  "extends": "strongloop",
-  "rules": {
-    "max-len": [2, 120, 8]
-  },
   "env": {
     "node": true,
-    "es6": true
+    "commonjs": true,
+    "es2021": true
   },
+  "extends": [
+    "google"
+  ],
   "parserOptions": {
-    "ecmaVersion": 2018
+    "ecmaVersion": 12
+  },
+  "rules": {
+    "require-jsdoc": 0,
+    "max-len": 0,
+    "new-cap": 0,
+    "indent": [
+      "error", 2,
+      {
+        "SwitchCase": 1,
+        "MemberExpression": 1,
+        "FunctionDeclaration": {
+          "body": 1,
+          "parameters": 1
+        },
+        "FunctionExpression": {
+          "body": 1,
+          "parameters": 1
+        },
+        "CallExpression": {
+          "arguments": 1
+        },
+        "ignoredNodes": ["ConditionalExpression"]
+      }
+    ]
   }
 }

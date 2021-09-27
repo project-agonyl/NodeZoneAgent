@@ -21,7 +21,7 @@ class MSG_ZA2LS_ACC_LOGOUT extends MSG_BASE {
       this.reason,
       getPacketFromStringByLength(this.account, 21),
       getPacketFromStringByLength(moment().format('YYYYMMDD'), 9),
-      getPacketFromStringByLength(moment().format('HHmmss'), 7)
+      getPacketFromStringByLength(moment().format('HHmmss'), 7),
     );
     return this;
   }

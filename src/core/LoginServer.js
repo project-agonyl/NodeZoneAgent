@@ -14,7 +14,7 @@ class LoginServer {
   }
 
   initialize() {
-    this.client = new Net.Socket({ allowHalfOpen: true });
+    this.client = new Net.Socket({allowHalfOpen: true});
     this.client.setKeepAlive(true);
     console.log('Trying to connect to LoginServer...');
     this.client.connect(this.config.LOGINSERVER.PORT, this.config.LOGINSERVER.IP);
@@ -26,7 +26,7 @@ class LoginServer {
         this.config.STARTUP.SERVERID,
         this.config.STARTUP.AGENTID,
         this.config.STARTUP.IP,
-        this.config.STARTUP.PORT
+        this.config.STARTUP.PORT,
       );
       this.client.write(initPacketMaker.build().serialize());
       this.heartbeat = setInterval(() => {
@@ -34,14 +34,14 @@ class LoginServer {
         const heartbeatPacketMaker = new MSG_ZA2LS_REPORT(
           Object.keys(players).length,
           this.config.ZONESERVER.COUNT,
-          this.config.ZONESERVER.COUNT
+          this.config.ZONESERVER.COUNT,
         );
         this.client.write(heartbeatPacketMaker.build().serialize());
       }, 1000);
     });
 
     this.client.on('data', (buffer) => {
-      let data = buffer.toByteArray();
+      const data = buffer.toByteArray();
       switch (data[8]) {
         case 0x01:
           switch (data[9]) {

@@ -22,7 +22,7 @@ class MSG_HEAD_NO_PROTOCOL extends MSG_BASE {
       getReverseHexPacket(this.size, 8),
       getReverseHexPacket(this.pcid, 8),
       this.ctrl,
-      this.cmd
+      this.cmd,
     );
     return this;
   }

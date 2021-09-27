@@ -21,7 +21,7 @@ class MSG_ZA2AS_NEW_CLIENT extends MSG_BASE {
       getPacketFromStringByLength(this.account, 21),
       getEmptyPacket(21),
       getPacketFromStringByLength(this.ipAddress, 16),
-      getEmptyPacket(78)
+      getEmptyPacket(78),
     );
     return this;
   }

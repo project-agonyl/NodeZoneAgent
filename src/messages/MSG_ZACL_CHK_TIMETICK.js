@@ -21,7 +21,7 @@ class MSG_ZACL_CHK_TIMETICK extends MSG_BASE {
       this.reason,
       getReverseHexPacket(this.tickCount, 8),
       getReverseHexPacket(this.tickSvr, 8),
-      getReverseHexPacket(this.tickClt, 8)
+      getReverseHexPacket(this.tickClt, 8),
     );
     return this;
   }

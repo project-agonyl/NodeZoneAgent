@@ -15,7 +15,7 @@ class MSG_ZA2ZS_ACC_LOGOUT extends MSG_BASE {
     this.packet = header.build().getPacket();
     this.packet = _.concat(
       this.packet,
-      this.reason
+      this.reason,
     );
     return this;
   }

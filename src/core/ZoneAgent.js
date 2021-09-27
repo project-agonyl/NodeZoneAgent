@@ -22,7 +22,7 @@ class ZoneAgent {
     });
 
     this.heartbeat = setInterval(() => {
-      for (var pcid in this.players) {
+      for (const pcid in this.players) {
         if (this.players[pcid].zoneStatus !== parseInt(this.config.ACCOUNTSERVER.ID, 10)) {
           this.players[pcid].tickCount++;
           this.players[pcid].tickSvr = Date.now();
@@ -30,7 +30,7 @@ class ZoneAgent {
             pcid,
             this.players[pcid].tickCount,
             this.players[pcid].tickSvr,
-            0
+            0,
           );
           this.players[pcid].socket.write(packetMaker.build().serialize());
         }
@@ -41,10 +41,10 @@ class ZoneAgent {
   stop() {
     console.log('Shutting down ZoneAgent...');
     clearInterval(this.heartbeat);
-    for (var pcid in this.players) {
-      console.log(`Kicking account ${this.players[pcid].account}`);
-      this.players[pcid].socket.destroy();
-    }
+    Object.keys(this.players).forEach((key) => {
+      console.log(`Kicking account ${this.players[key].account}`);
+      this.players[key].socket.destroy();
+    });
 
     process.exit(0);
   }

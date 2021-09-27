@@ -22,7 +22,7 @@ class MSG_ZA2LS_CONNECT extends MSG_BASE {
       this.serverId,
       this.agentId,
       getPacketFromStringByLength(this.zaIp, 16),
-      getReverseHexPacket(this.zaPort, 8)
+      getReverseHexPacket(this.zaPort, 8),
     );
     return this;
   }
