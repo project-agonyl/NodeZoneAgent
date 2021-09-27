@@ -99,6 +99,8 @@ class ZoneAgentSession {
     }
 
     data = insertPcidIntoData(data, this.id);
+    console.log('C2S packet');
+    console.log(data);
     switch (data[8]) {
       case 0x01:
         switch (data[9]) {
