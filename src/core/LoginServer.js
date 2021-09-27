@@ -46,7 +46,7 @@ class LoginServer {
         case 0x01:
           switch (data[9]) {
             case 0xE1:
-              const account = getStringFromByteArray(data, 10, 20);
+              const account = getStringFromByteArray(data, 10, 21);
               const pcid = getPcidFromPacket(data);
               this.preparedUsers[pcid] = account;
               console.log(`Account ${account} prepared!`);
