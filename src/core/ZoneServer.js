@@ -84,8 +84,6 @@ class ZoneServer {
       return;
     }
 
-    console.log(`S2C packet from ${this.name}`);
-    console.log(data);
     if (data[8] === 0x01 && data[9] === 0xE1) {
       const decryptedData = decrypt(data);
       // eslint-disable-next-line max-len

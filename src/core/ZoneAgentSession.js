@@ -50,7 +50,7 @@ class ZoneAgentSession {
       if (this.id) {
         if (this.logoutReason !== 0) {
           const zsLogoutPacketMaker = new MSG_ZA2ZS_ACC_LOGOUT(this.id, this.logoutReason);
-          this.zoneAgent.zoneServers.ZS[this.zoneStatus]
+          this.zoneAgent.zoneServers.ZS[this.getMyZoneStatus()]
             .client.write(zsLogoutPacketMaker.build().serialize());
         }
 
@@ -99,8 +99,6 @@ class ZoneAgentSession {
     }
 
     data = insertPcidIntoData(data, this.id);
-    console.log('C2S packet');
-    console.log(data);
     switch (data[8]) {
       case 0x01:
         switch (data[9]) {
@@ -123,11 +121,11 @@ class ZoneAgentSession {
                 break;
               case 0x08: // Logout
                 this.logoutReason = 0;
-                this.zoneAgent.zoneServers.ZS[this.zoneStatus]
+                this.zoneAgent.zoneServers.ZS[this.getMyZoneStatus()]
                   .client.write(Buffer.from(data));
                 break;
               default:
-                this.zoneAgent.zoneServers.ZS[this.zoneStatus]
+                this.zoneAgent.zoneServers.ZS[this.getMyZoneStatus()]
                   .client.write(Buffer.from(data));
                 break;
             }
@@ -141,7 +139,7 @@ class ZoneAgentSession {
                   .client.write(Buffer.from(data));
                 break;
               default:
-                this.zoneAgent.zoneServers.ZS[this.zoneStatus]
+                this.zoneAgent.zoneServers.ZS[this.getMyZoneStatus()]
                   .client.write(Buffer.from(data));
                 break;
             }
@@ -155,14 +153,14 @@ class ZoneAgentSession {
                   .client.write(Buffer.from(data));
                 break;
               default:
-                this.zoneAgent.zoneServers.ZS[this.zoneStatus]
+                this.zoneAgent.zoneServers.ZS[this.getMyZoneStatus()]
                   .client.write(Buffer.from(data));
                 break;
             }
 
             break;
           default:
-            this.zoneAgent.zoneServers.ZS[this.zoneStatus]
+            this.zoneAgent.zoneServers.ZS[this.getMyZoneStatus()]
               .client.write(Buffer.from(data));
             break;
         }
@@ -184,6 +182,10 @@ class ZoneAgentSession {
 
         break;
     }
+  }
+
+  getMyZoneStatus() {
+    return this.zoneAgent.players[this.id].zoneStatus;
   }
 }
 
