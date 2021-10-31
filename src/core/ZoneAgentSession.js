@@ -185,7 +185,7 @@ class ZoneAgentSession {
   }
 
   getMyZoneStatus() {
-    return this.zoneAgent.players[this.id].zoneStatus;
+    return parseInt(this.zoneStatus, 10);
   }
 }
 
