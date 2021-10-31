@@ -112,52 +112,22 @@ class ZoneAgentSession {
 
         break;
       case 0x03:
-        switch (data[11]) {
-          case 0x11:
-            switch (data[10]) {
-              case 0x06: // Login
-                this.zoneAgent.zoneServers.ZS[parseInt(this.zoneAgent.config.ACCOUNTSERVER.ID, 10)]
-                  .client.write(Buffer.from(data));
-                break;
-              case 0x08: // Logout
-                this.logoutReason = 0;
-                this.zoneAgent.zoneServers.ZS[this.getMyZoneStatus()]
-                  .client.write(Buffer.from(data));
-                break;
-              default:
-                this.zoneAgent.zoneServers.ZS[this.getMyZoneStatus()]
-                  .client.write(Buffer.from(data));
-                break;
-            }
-
+        switch (getIntFromReverseHex([data[10], data[11]])) {
+          case 0x1106: // Character login
+          case 0x2322: // Transfer Clan Mark
+          case 0x2323: // Clan...
+          case 0xA001: // Create Character
+          case 0xA002: // Delete Character
+            this.zoneAgent.zoneServers.ZS[parseInt(this.zoneAgent.config.ACCOUNTSERVER.ID, 10)]
+              .client.write(Buffer.from(data));
             break;
-          case 0xA0:
-            switch (data[10]) {
-              case 0x01: // Create character
-              case 0x02: // Delete character
-                this.zoneAgent.zoneServers.ZS[parseInt(this.zoneAgent.config.ACCOUNTSERVER.ID, 10)]
-                  .client.write(Buffer.from(data));
-                break;
-              default:
-                this.zoneAgent.zoneServers.ZS[this.getMyZoneStatus()]
-                  .client.write(Buffer.from(data));
-                break;
-            }
-
+          case 0x1108: //logout
+            this.logoutReason = 0;
+            this.zoneAgent.zoneServers.ZS[this.getMyZoneStatus()]
+              .client.write(Buffer.from(data));
             break;
-          case 0x23:
-            switch (data[10]) {
-              case 0x22: // Change KH logo
-              case 0x23: // Get KH logo
-                this.zoneAgent.zoneServers.ZS[parseInt(this.zoneAgent.config.ACCOUNTSERVER.ID, 10)]
-                  .client.write(Buffer.from(data));
-                break;
-              default:
-                this.zoneAgent.zoneServers.ZS[this.getMyZoneStatus()]
-                  .client.write(Buffer.from(data));
-                break;
-            }
-
+          case 0xC000: // Payment packet
+            console.log('Payment info packet');
             break;
           default:
             this.zoneAgent.zoneServers.ZS[this.getMyZoneStatus()]
@@ -167,16 +137,14 @@ class ZoneAgentSession {
 
         break;
       default:
-        switch (data[11]) {
-          case 0x23:
-            switch (data[10]) {
-              case 0x22: // Change KH logo
-              case 0x23: // Get KH logo
-                this.zoneAgent.zoneServers.ZS[parseInt(this.zoneAgent.config.ACCOUNTSERVER.ID, 10)]
-                  .client.write(Buffer.from(data));
-                break;
-            }
-
+        switch (getIntFromReverseHex([data[10], data[11]])) {
+          case 0x2322: // Transfer Clan Mark
+          case 0x2323: // Clan...
+            this.zoneAgent.zoneServers.ZS[parseInt(this.zoneAgent.config.ACCOUNTSERVER.ID, 10)]
+              .client.write(Buffer.from(data));
+            break;
+          default:
+            console.log(`CL->ZA unknown command ${data[9]}`);
             break;
         }
 
