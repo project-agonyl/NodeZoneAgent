@@ -1,3 +1,4 @@
+const fs = require('fs');
 const Net = require('net');
 const _ = require('lodash');
 const MSG_ZA2ZS_CONNECT = require('../messages/MSG_ZA2ZS_CONNECT');
@@ -42,6 +43,7 @@ class ZoneServer {
 
     this.client.on('data', (buffer) => {
       let data = buffer.toByteArray();
+      const packetHolder = {};
       while (data.length > 4) {
         const currentLength = getDataLengthFromPacket(data);
         if (currentLength === 0) {
@@ -49,13 +51,17 @@ class ZoneServer {
         }
 
         if (currentLength >= data.length) {
-          this.processPacket(data);
+          this.processPacket(data, packetHolder);
           break;
         }
 
-        this.processPacket(_.slice(data, 0, currentLength));
+        this.processPacket(_.slice(data, 0, currentLength), packetHolder);
         data = _.slice(data, currentLength);
       }
+
+      _.forEach(packetHolder, (packet, pcid) => {
+        this.zoneAgent.players[pcid].socket.write(Buffer.from(packet));
+      });
     });
 
     this.client.on('error', () => {
@@ -78,7 +84,7 @@ class ZoneServer {
     });
   }
 
-  processPacket(data) {
+  processPacket(data, packetHolder) {
     const pcid = getPcidFromPacket(data);
     if (!_.has(this.zoneAgent.players, pcid)) {
       return;
@@ -106,7 +112,11 @@ class ZoneServer {
       data = encrypt(data);
     }
 
-    this.zoneAgent.players[pcid].socket.write(Buffer.from(data));
+    if (_.has(packetHolder, pcid)) {
+      packetHolder[pcid] = [...packetHolder[pcid], ...data];
+    } else {
+      packetHolder[pcid] = data;
+    }
   }
 }
 

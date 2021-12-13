@@ -99,55 +99,26 @@ class ZoneAgentSession {
     }
 
     data = insertPcidIntoData(data, this.id);
-    switch (data[8]) {
-      case 0x01:
-        switch (data[9]) {
-          case 0xF0:
-            console.log('Time-tick packet');
-            break;
-          default:
-            console.log(`CL->ZA unknown command ${data[9]}`);
-            break;
-        }
-
+    switch (getIntFromReverseHex([data[10], data[11]])) {
+      case 0x1106: // Character login
+      case 0x2322: // Transfer Clan Mark
+      case 0x2323: // Clan...
+      case 0xA001: // Create Character
+      case 0xA002: // Delete Character
+        this.zoneAgent.zoneServers.ZS[parseInt(this.zoneAgent.config.ACCOUNTSERVER.ID, 10)]
+          .client.write(Buffer.from(data));
         break;
-      case 0x03:
-        switch (getIntFromReverseHex([data[10], data[11]])) {
-          case 0x1106: // Character login
-          case 0x2322: // Transfer Clan Mark
-          case 0x2323: // Clan...
-          case 0xA001: // Create Character
-          case 0xA002: // Delete Character
-            this.zoneAgent.zoneServers.ZS[parseInt(this.zoneAgent.config.ACCOUNTSERVER.ID, 10)]
-              .client.write(Buffer.from(data));
-            break;
-          case 0x1108: //logout
-            this.logoutReason = 0;
-            this.zoneAgent.zoneServers.ZS[this.getMyZoneStatus()]
-              .client.write(Buffer.from(data));
-            break;
-          case 0xC000: // Payment packet
-            console.log('Payment info packet');
-            break;
-          default:
-            this.zoneAgent.zoneServers.ZS[this.getMyZoneStatus()]
-              .client.write(Buffer.from(data));
-            break;
-        }
-
+      case 0x1108: // logout
+        this.logoutReason = 0;
+        this.zoneAgent.zoneServers.ZS[this.getMyZoneStatus()]
+          .client.write(Buffer.from(data));
+        break;
+      case 0xC000: // Payment packet
+        console.log('Payment info packet');
         break;
       default:
-        switch (getIntFromReverseHex([data[10], data[11]])) {
-          case 0x2322: // Transfer Clan Mark
-          case 0x2323: // Clan...
-            this.zoneAgent.zoneServers.ZS[parseInt(this.zoneAgent.config.ACCOUNTSERVER.ID, 10)]
-              .client.write(Buffer.from(data));
-            break;
-          default:
-            console.log(`CL->ZA unknown command ${data[9]}`);
-            break;
-        }
-
+        this.zoneAgent.zoneServers.ZS[this.getMyZoneStatus()]
+          .client.write(Buffer.from(data));
         break;
     }
   }
