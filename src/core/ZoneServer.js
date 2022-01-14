@@ -98,18 +98,20 @@ class ZoneServer {
       return;
     }
 
-    if (data[10] === 0x07 && data[11] === 0x11) {
-      // Save character name and town to ZA player list
-    } else if (data[10] === 0x05 && data[11] === 0x11) {
-      data = decrypt(data);
-      for (let i = 32; i <= 784; i += 188) {
-        data[i + 3] = data[i + 2];
-        data[i + 2] = data[i + 1];
-        data[i + 1] = 1;
-        data[i] = 0x00;
-      }
+    if (data.length > 11) { // Some packets are shorter than 11 bytes
+      if (data[10] === 0x07 && data[11] === 0x11) {
+        // Save character name and town to ZA player list
+      } else if (data[10] === 0x05 && data[11] === 0x11) {
+        data = decrypt(data);
+        for (let i = 32; i <= 784; i += 188) {
+          data[i + 3] = data[i + 2];
+          data[i + 2] = data[i + 1];
+          data[i + 1] = 1;
+          data[i] = 0x00;
+        }
 
-      data = encrypt(data);
+        data = encrypt(data);
+      }
     }
 
     if (_.has(packetHolder, pcid)) {
